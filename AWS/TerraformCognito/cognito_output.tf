@@ -4,7 +4,7 @@ output "client_pool_id"{
 }
 
 output "client_endpoint"{
-    description = "User Pool Id to be copied for authentication"
+    
     value=module.aws_cognito_user_pool_complete_example.endpoint
 }
 output "client_id" {

@@ -1,9 +1,7 @@
 data "aws_route53_zone" "customdomain" {
   name = var.domain_name
 }
-/*data "aws_cloudfront_distribution" "cognitocf" {
-  id = replace(module.aws_cognito_user_pool_complete_example.domain_cloudfront_distribution_arn, ".cloudfront.net", "")
-}*/
+
 resource "aws_route53_record" "cognito_dns" {
   zone_id = data.aws_route53_zone.customdomain.zone_id
   name    = var.custom_domain_name
