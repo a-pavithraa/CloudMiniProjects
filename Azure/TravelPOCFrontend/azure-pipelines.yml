@@ -68,4 +68,4 @@ stages:
               azureSubscription: 'StaticWebsite'
               scriptType: 'batch'
               scriptLocation: 'inlineScript'
-              inlineScript: 'az storage blob upload-batch -d $(CONTAINER_NAME_UPLOAD) -s "$(System.ArtifactsDirectory)\build"  --account-name $(STORAGE_ACCOUNT_NAME) --account-key $(ACCOUNT_KEY)'
+              inlineScript: 'az storage blob upload-batch -d $(CONTAINER_NAME_UPLOAD) -s $(System.ArtifactsDirectory)/build  --account-name $(STORAGE_ACCOUNT_NAME) --account-key $(ACCOUNT_KEY)'
