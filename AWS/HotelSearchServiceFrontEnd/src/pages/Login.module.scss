@@ -1,0 +1,83 @@
+.login {
+  
+    max-width: 40rem;
+    margin: 2rem auto;
+    padding: 20px;
+    box-shadow:0 8px 16px 2px rgba(200, 198, 207, 0.2);
+    height: calc(100% - 122px);
+   width:90%;
+    background-color: #050b24;
+  }
+  
+  .actions {
+    text-align: center;
+    margin-top:20px;
+  }
+  .floatRight{
+  margin-left: auto; 
+      margin-right: 0;
+      float:right;
+     
+  }
+  .btnActions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .borderBottom{
+    padding:10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid;
+  }
+  .cfInputField {
+  appearance: none;
+  background-color: #202028;
+  border-radius: 4px;
+  border: 2px solid #383846;
+  box-sizing: border-box;
+  color: #bec2cc;
+  font-family: 'Rubik', Helvetica, Arial, Tahoma, Verdana, sans-serif;
+  font-weight: 500;
+  outline: none;
+  position: relative;
+  transition: background-color 0.25s ease, border-color 0.25s ease,
+    color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+  width: 100%;
+  z-index: 1;
+
+  &:hover {
+    background-color: #202028;
+    border-color: mix(#383846, #00a3ff, 50%);
+    color: #d4d7dd;
+  }
+
+  &:focus {
+    background-color: #202028;
+    border-color: #00a3ff;
+    box-shadow: 0 0 6px 0 #00a3ff;
+    color: #ffffff;
+  }
+
+  &::-webkit-input-placeholder {
+    color: #757888;
+    font-style: italic;
+    font-weight: 500 !important;
+  }
+  &::-moz-placeholder {
+    color: #757888;
+    font-style: italic;
+    font-weight: 500 !important;
+  }
+  &:-ms-input-placeholder {
+    color: #757888;
+    font-style: italic;
+    font-weight: 500 !important;
+  }
+  &:-moz-placeholder {
+    color: #757888;
+    font-style: italic;
+    font-weight: 500 !important;
+  }
+}
+  

@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-utitlity-service
+data:    
+  kubernetes.profile: "Y"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-utility-service
+  labels:
+    app: aws-utility-service
+    s1p: aws-utility
+spec:
+  selector:
+    matchLabels:
+      app: aws-utility-service
+  template:
+    metadata:
+      labels:
+        app: aws-utility-service 
+    spec:
+      serviceAccountName: hotelservice
+      containers:
+      - name: aws-utility-service
+        image: pavithravasudevan/aws-utility-service:0.0.1-SNAPSHOT
+        imagePullPolicy: Always 
+        resources:
+          requests:
+            cpu: "100m"       
+            memory: "256Mi"
+          limits:
+            cpu: "500m"       
+            memory: "512Mi"
+        envFrom:
+        - configMapRef:
+            name: aws-utitlity-service               
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aws-utility-service
+  labels:
+    s1p: aws-utility
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health/readiness
+spec:
+  type: ClusterIP
+  selector:
+    app: aws-utility-service
+  ports:
+  - port: 80
+    targetPort: 80

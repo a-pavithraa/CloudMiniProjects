@@ -1,0 +1,58 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hotel-service
+data:  
+  rapidapi.key: 1c166ffaf2msh3d0fe1a1205694ap1ec782jsnf88e53ed8511
+  api.awsUtilityUrl: http://aws-utility-service:80/
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-service
+  labels:
+    app: hotel-service
+    s1p: hotel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-service
+  template:
+    metadata:
+      labels:
+        app: hotel-service 
+    spec:
+      containers:
+      - name: hotel-service
+        image: pavithravasudevan/hotelsearchservice:0.0.1-SNAPSHOT
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: hotel-service
+        resources:
+          requests:
+            cpu: "500m"       
+            memory: "512Mi"
+          limits:
+            cpu: "500m"       
+            memory: "512Mi"      
+        ports:
+        - containerPort: 8102
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-service
+  labels:
+    s1p: hotel
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health/readiness
+spec:
+  type: NodePort
+  selector:
+    app: hotel-service
+  ports:
+  - port: 80
+    targetPort: 8102
