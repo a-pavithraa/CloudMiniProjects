@@ -13,7 +13,6 @@ Aim of this mini project is to deploy an application across multiple services in
 - AKS (Azure Kubernetes Service)
 
 - APIM and Function App
-  
 
 Application backend is developed using Spring Boot , Node JS( for lambda and function app) and front end is developed using ReactJS.
 
@@ -23,9 +22,9 @@ Authentication is done via Cognito in AWS and AD B2C in Azure
 
 #### **Terraform:**
 
-​**<u>AWS:</u>**
+**<u>AWS:</u>**
 
-​	Separate terraform projects are created:
+   Separate terraform projects are created:
 
 - Cognito User Pool along with app clients, custom domain names, Google IDP
 
@@ -78,4 +77,3 @@ https://www.udemy.com/course/aws-eks-kubernetes-masterclass-devops-microservices
 https://www.udemy.com/course/serverless-tutorial-aws-lambda-and-azure-functions
 
 https://www.udemy.com/course/terraform-certified/
-
