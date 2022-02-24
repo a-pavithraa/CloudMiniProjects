@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: hotel-service
 data:  
-  rapidapi.key: 1c166ffaf2msh3d0fe1a1205694ap1ec782jsnf88e53ed8511
+  rapidapi.key: <<Placeholder for RAPIDAPI key>>
   api.awsUtilityUrl: http://aws-utility-service:80/
 ---
 apiVersion: apps/v1

@@ -9,36 +9,63 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '14.x'
-  displayName: 'Install Node.js'
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: PublishArtifacts
+    displayName: Publish Artifacts
+    pool:
+      vmImage: windows-latest
 
-- script: |
-    npm install && npm run build    
-  displayName: 'npm install and build '
+    steps: 
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x'
+      displayName: 'Install Node.js'
+    - script: |
+        npm install && npm run build    
+        displayName: 'npm install and build '
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)/build'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'build'
+        path: '$(Build.ArtifactStagingDirectory)' 
+   
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Build.SourceDirectory)/build'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-- task: PublishPipelineArtifact@1
-  inputs:
-    artifactName: 'build'
-    path: '$(Build.ArtifactStagingDirectory)'
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy job
+    pool:
+      vmImage: windows-latest
+    environment: pills
+    
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: 'build'
+              downloadPath: '$(System.ArtifactsDirectory)/build'        
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'StaticWebsite'
-    scriptType: 'batch'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage blob delete-batch --account-key m+uGxx5VbMW0XWheoS2ZmLcsN+51mVr2VMZ1q0S1MfdTM0f2K7NyIFF0RK/vnQKwh2qbt1QlrbFR+AStR1wo7A== --account-name pills2402  --source $web'
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'StaticWebsite'
-    scriptType: 'batch'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage blob upload-batch -d "$web" -s $(System.ArtifactsDirectory)/build  --account-name pills2402 --account-key m+uGxx5VbMW0XWheoS2ZmLcsN+51mVr2VMZ1q0S1MfdTM0f2K7NyIFF0RK/vnQKwh2qbt1QlrbFR+AStR1wo7A=='
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'StaticWebsite'
+              scriptType: 'batch'
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az storage blob delete-batch --account-key $(ACCOUNT_KEY) --account-name $(STORAGE_ACCOUNT_NAME)  --source $(CONTAINER_NAME)'
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'StaticWebsite'
+              scriptType: 'batch'
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az storage blob upload-batch -d $(CONTAINER_NAME_UPLOAD) -s "$(System.ArtifactsDirectory)\build"  --account-name $(STORAGE_ACCOUNT_NAME) --account-key $(ACCOUNT_KEY)'
