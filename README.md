@@ -77,3 +77,10 @@ https://www.udemy.com/course/aws-eks-kubernetes-masterclass-devops-microservices
 https://www.udemy.com/course/serverless-tutorial-aws-lambda-and-azure-functions
 
 https://www.udemy.com/course/terraform-certified/
+
+
+
+**RAPID API URL to register:**
+
+https://rapidapi.com/tipsters/api/booking-com/
+
