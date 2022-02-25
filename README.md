@@ -54,7 +54,7 @@ Separate terraform projects are created for the following:
 
 RapidAPI Key , Connection strings required for connecting to RapidAPI and DB can be configured via ConfigMap. Placeholders are present in the manifests.
 
-FrontEnd React App:
+#### **FrontEnd React App:**
 
  CI/CD pipelines for frontend app are configured for both AWS (github actions) and Azure (Azure Devops) projects. File Constants.js has to be updated (mentioned in the respective folder)
 
