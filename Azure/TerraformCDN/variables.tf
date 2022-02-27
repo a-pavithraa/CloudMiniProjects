@@ -1,6 +1,6 @@
 variable "prefix" {
   description = "The prefix which should be used for all resources in this example"
-  default     = "pills"
+  default     = "hotelsearchservice"
 }
 
 variable "location" {
@@ -82,6 +82,7 @@ variable "domain_name" {
   
 }
 
+/**
 variable "keyvault_name" {
   description = "Key Vault name where certificate is uploaded"
   type        = string
@@ -98,3 +99,4 @@ variable "key_vault_cert_id" {
   type    = string
 
 }
+*/
