@@ -1,3 +1,5 @@
+This project creates azure blob storage configured for static website, Azure CDN profile, endpoint and enables custom domain along with SSL/TLS certificate
+
 Create terraform.tfvars with the following entries:
 
 dnszone_rg= Resource group of DNS Zone
