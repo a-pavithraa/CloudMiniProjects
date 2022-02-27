@@ -49,6 +49,7 @@ resource "azurerm_cdn_profile" "cdn-profile" {
   resource_group_name = azurerm_resource_group.staticwebsite_rg.name
   location            = var.location
   sku                 = var.cdn_sku_profile
+  
  // tags                = merge({ "Name" = format("%s", var.cdn_profile_name) }, var.tags, )
 }
 
@@ -67,6 +68,7 @@ resource "azurerm_cdn_endpoint" "cdn-endpoint" {
   resource_group_name           = azurerm_resource_group.staticwebsite_rg.name
   origin_host_header            = azurerm_storage_account.storage_account.primary_web_host
   querystring_caching_behaviour = "IgnoreQueryString"
+ 
 
   origin {
     name      = "websiteorginaccount"
@@ -88,16 +90,63 @@ resource "azurerm_dns_cname_record" "cname_record" {
   target_resource_id  = azurerm_cdn_endpoint.cdn-endpoint.id
 }
 
+data "azurerm_key_vault" "cert-keyvault" {
+  name                = var.keyvault_name
+  resource_group_name = var.keyvault_resgroup_name
+}
+//Powershell module has to be executedInstall-Module -Name Az -AllowClobber
+resource "null_resource" "add_sp"{
+provisioner "local-exec" {
+    command = "pwsh ${path.module}/customscript.ps1"
+}
+}
+
+/**data "external" "getPrincipalId" {
+  program = ["Powershell.exe", "./customscript.ps1"]
+  query = {
+      environment = "${var.environment_name}"
+  }
+}*/
+
+data "azuread_service_principal" "sp_frontdoor" {
+  display_name = "Microsoft.AzureFrontDoor-Cdn"
+}
+output "application_object_id" {
+  value = data.azuread_service_principal.sp_frontdoor.id
+}
+
+resource "azurerm_role_assignment" "akv_sp" {
+  scope                = data.azurerm_key_vault.cert-keyvault.id
+  role_definition_name = "Key Vault Reader"
+  principal_id         = data.azuread_service_principal.sp_frontdoor.id
+}
+
 resource "azurerm_cdn_endpoint_custom_domain" "example" {
   name            = "${var.custom_domain_name}"
   cdn_endpoint_id = azurerm_cdn_endpoint.cdn-endpoint.id
   host_name       = "${azurerm_dns_cname_record.cname_record.name}.${var.domain_name}"
-  /**cdn_managed_https{
-    certificate_type = "Shared"
-    protocol_type = "ServerNameIndication"
-  }*/
+  user_managed_https{
+    key_vault_certificate_id=var.key_vault_cert_id
+    tls_version="TLS12"
+  }
+}
+/**data "azuread_application" "example" {
+  object_id = "a270ae3d-5ae6-4c98-ac71-dff80c41a0b0"
 }
 
+output "application_object_id" {
+  value = data.azuread_application.example.id
+}*/
+
+
+
+
+
+
+/**
+
+
+*/
 /**resource "null_resource" "add_custom_domain" {
   count = var.custom_domain_name != null ? 1 : 0
   triggers = { always_run = timestamp() }

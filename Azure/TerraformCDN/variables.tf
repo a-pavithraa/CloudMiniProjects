@@ -54,7 +54,7 @@ variable "cdn_profile_name" {
 
 variable "cdn_sku_profile" {
   description = "The pricing related information of current CDN profile. Accepted values are 'Standard_Akamai', 'Standard_ChinaCdn', 'Standard_Microsoft', 'Standard_Verizon' or 'Premium_Verizon'."
-  default     = "Standard_Verizon"
+  default     = "Standard_Microsoft"
 }
 
 variable "custom_domain_name" {
@@ -78,8 +78,23 @@ variable "friendly_name" {
   
 }
 
-variable "domain_name" {
+variable "domain_name" {  
+  
+}
 
-  
-  
+variable "keyvault_name" {
+  description = "Key Vault name where certificate is uploaded"
+  type        = string
+ 
+
+}
+variable "keyvault_resgroup_name" {
+  description = ""
+  type        = string
+}
+
+variable "key_vault_cert_id" {
+ 
+  type    = string
+
 }
