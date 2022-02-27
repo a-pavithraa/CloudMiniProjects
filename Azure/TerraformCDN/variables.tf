@@ -74,12 +74,12 @@ variable "custom_404_path" {
 
 variable "friendly_name" {
 
-  default="Pills"
-  
+  default = "Pills"
+
 }
 
-variable "domain_name" {  
-  
+variable "domain_name" {
+
 }
 
 /**

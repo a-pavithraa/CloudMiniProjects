@@ -1,10 +1,10 @@
 provider "azurerm" {
-    
-    features {}
+
+  features {}
 }
- 
+
 data "azurerm_client_config" "current" {}
- 
+
 #Create Resource Group
 resource "azurerm_resource_group" "staticwebsite_rg" {
   name     = "${var.prefix}staticwebsite"
@@ -12,17 +12,17 @@ resource "azurerm_resource_group" "staticwebsite_rg" {
 }
 
 
- 
+
 #Create Storage account
 resource "azurerm_storage_account" "storage_account" {
   name                = "${var.prefix}2402"
   resource_group_name = azurerm_resource_group.staticwebsite_rg.name
- 
+
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
- 
+
   static_website {
     index_document = "index.html"
   }
@@ -40,35 +40,35 @@ resource "azurerm_storage_account" "storage_account" {
     type = "SystemAssigned"
   }
 }
- 
+
 #Add index.html to blob storage
 
 resource "azurerm_cdn_profile" "cdn-profile" {
- 
+
   name                = var.cdn_profile_name
   resource_group_name = azurerm_resource_group.staticwebsite_rg.name
   location            = var.location
   sku                 = var.cdn_sku_profile
-  
- // tags                = merge({ "Name" = format("%s", var.cdn_profile_name) }, var.tags, )
+
+  // tags                = merge({ "Name" = format("%s", var.cdn_profile_name) }, var.tags, )
 }
 
 resource "random_string" "unique" {
- 
+
   length  = 8
   special = false
   upper   = false
 }
 
 resource "azurerm_cdn_endpoint" "cdn-endpoint" {
-  
+
   name                          = random_string.unique.result
   profile_name                  = azurerm_cdn_profile.cdn-profile.name
   location                      = var.location
   resource_group_name           = azurerm_resource_group.staticwebsite_rg.name
   origin_host_header            = azurerm_storage_account.storage_account.primary_web_host
   querystring_caching_behaviour = "IgnoreQueryString"
- 
+
 
 
   origin {
@@ -102,7 +102,7 @@ resource "time_sleep" "wait_60_seconds" {
 
 
 resource "azurerm_cdn_endpoint_custom_domain" "example" {
-  name            = "${var.custom_domain_name}"
+  name            = var.custom_domain_name
   cdn_endpoint_id = azurerm_cdn_endpoint.cdn-endpoint.id
   host_name       = "${azurerm_dns_cname_record.cname_record.name}.${var.domain_name}"
   cdn_managed_https {
