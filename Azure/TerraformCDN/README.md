@@ -1,5 +1,6 @@
 Create terraform.tfvars with the following entries:
 
-account_id= AWS Account ID
+dnszone_rg= Resource group of DNS Zone
+custom_domain_name= Name of the subdomain
+domain_name= Registered Domain Name
 
-hosted_zone_id= ID of R53 Hosted Zone
