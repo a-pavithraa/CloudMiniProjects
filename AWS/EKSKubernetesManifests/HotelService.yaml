@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: hotel-service
 data:  
-  rapidapi.key: <<Placeholder for RAPIDAPI key>>
+  rapidapi.key: << Placeholder for rapid api key >>
   api.awsUtilityUrl: http://aws-utility-service:80/
 ---
 apiVersion: apps/v1
@@ -37,7 +37,7 @@ spec:
             memory: "512Mi"
           limits:
             cpu: "500m"       
-            memory: "512Mi"      
+            memory: "1Gi"      
         ports:
         - containerPort: 8102
 ---

@@ -7,7 +7,7 @@ variable "region" {
   default = "us-east-1"
 }
 variable "account_id" {
-  description="Account ID"
+  description = "Account ID"
 }
 
 variable "prefix" {
@@ -24,8 +24,8 @@ variable "vpc_cidr_block" {
   default     = "10.16.0.0/16"
 }
 
-variable "hosted_zone_id"{
-description="Hosted Zone Id for External DNS service account"
-type= string
+variable "hosted_zone_id" {
+  description = "Hosted Zone Id for External DNS service account"
+  type        = string
 }
 

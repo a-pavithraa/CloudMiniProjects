@@ -1,7 +1,7 @@
 module "eks" {
   source                   = "terraform-aws-modules/eks/aws"
   cluster_name             = local.cluster_name
-   version = "17.24.0"
+  version                  = "17.24.0"
   cluster_version          = "1.20"
   subnets                  = module.vpc.private_subnets
   attach_worker_cni_policy = true

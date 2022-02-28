@@ -35,7 +35,17 @@ spec:
             backend:
               serviceName: hotel-service
               servicePort: 80
-  
+    - host: monitoring.pavithraavasudevan.com
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: ssl-redirect
+              servicePort: use-annotation               
+          - path: /*
+            backend:
+              serviceName: kube-prometheus-stack-grafana
+              servicePort: 80
  
    
     
