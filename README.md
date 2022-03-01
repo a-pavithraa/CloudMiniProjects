@@ -14,6 +14,8 @@ Aim of this mini project is to deploy an application across multiple services in
 
 - APIM and Function App
 
+- Azure storage (for static website) and Azure CDN with custom domain
+
 Application backend is developed using Spring Boot , Node JS( for lambda and function app) and front end is developed using ReactJS.
 
 I have created two separate folders for Azure and AWS. Each one has separate folders for Terraform code for each of the services, Frontend Code(since Authorization mechanism differs for each of the cloud providers) and Spring Boot backend code. The main difference in backend code is for AWS , DynamoDB is used and for Azure , Cosmos DB with MongoDBClient is used.
