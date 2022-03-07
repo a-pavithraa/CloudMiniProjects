@@ -19,6 +19,32 @@ stages:
 
     - task: PublishPipelineArtifact@1
       inputs:
-        artifactName: 'drop'
-        path: '.'
+        artifactName: 'manifests'
+        path: 'manifests'
    
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy job
+    pool:
+      vmImage: ubuntu-latest
+    environment: pills
+    
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: 'manifests'
+              downloadPath: '$(System.ArtifactsDirectory)/manifests'
+
+          - task: KubernetesManifest@0
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'BookingServiceAKSConnection'
+              namespace: 'default'
+              manifests: '$(System.ArtifactsDirectory)/manifests/*.yml'
+        
