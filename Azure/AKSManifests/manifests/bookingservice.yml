@@ -1,0 +1,57 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hotel-service
+data:  
+  # Register and get the key from https://rapidapi.com/tipsters/api/booking-com/
+  rapidapi.key: <<Place holder for rapid api key>>
+  api.azureUtilityUrl: "azure-utitlity-service.default.svc.cluster.local"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-service
+  labels:
+    app: hotel-service
+    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-service
+  template:
+    metadata:
+      labels:
+        app: hotel-service 
+    spec:
+      containers:
+      - name: hotel-service        
+        image: pavithravasudevan/hotelsearchserviceazure:0.0.1-SNAPSHOT
+        imagePullPolicy: Always  
+        resources:
+          requests:
+            cpu: "100m"       
+            memory: "256Mi"
+          limits:
+            cpu: "500m"       
+            memory: "512Mi"  
+        envFrom:
+        - configMapRef:
+            name: hotel-service        
+        ports:
+        - containerPort: 8103
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-service  
+  labels:
+    app: hotel-service
+spec:
+  type: ClusterIP
+  selector:
+    app: hotel-service
+  ports:
+  - port: 80
+    targetPort: 8103

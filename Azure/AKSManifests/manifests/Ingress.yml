@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: bookingservice-ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    cert-manager.io/cluster-issuer: letsencrypt 
+   
+spec:
+  rules:
+  - host: bookingservice.saaralkaatru.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: hotel-service
+          servicePort: 80   
+  tls:
+  - hosts:
+    # Need to updated with the domain name registered
+    - bookingservice.saaralkaatru.com
+    secretName: bookingservice-saaralkaatru-secret 
+         
+ 
+
+          

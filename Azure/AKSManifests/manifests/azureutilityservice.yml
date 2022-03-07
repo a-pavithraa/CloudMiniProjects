@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: azure-utitlity-service
+data:    
+  spring.data.mongodb.database: <<placeholder for db name>>
+  #spring.data.mongodb.uri: mongodb://bookmarkedhotels:szVggF782fH1g5cjE1iyIkxiQRzQJu7fh2Y2A4nAIkGJSER5YvMToEeqSazRJPGyQZmTXx3Du5LGOgc5yjKryw==@bookmarkedhotels.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@bookmarkedhotels@
+  spring.data.mongodb.uri: << placeholder for connection string>>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-utitlity-service
+  labels:
+    app: azure-utitlity-service    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-utitlity-service
+  template:
+    metadata:
+      labels:
+        app: azure-utitlity-service 
+    spec:      
+      containers:
+      - name: azure-utitlity-service
+        image: pavithravasudevan/azureutitlityservice:0.0.1-SNAPSHOT
+        imagePullPolicy: Always 
+        resources:
+          requests:
+            cpu: "100m"       
+            memory: "256Mi"
+          limits:
+            cpu: "500m"       
+            memory: "512Mi"
+           
+        envFrom:
+        - configMapRef:
+            name: azure-utitlity-service               
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-utitlity-service 
+spec:
+  type: ClusterIP
+  selector:
+    app: azure-utitlity-service
+  ports:
+  - port: 80
+    targetPort: 8080
